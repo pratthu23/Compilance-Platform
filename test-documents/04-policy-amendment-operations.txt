@@ -1,0 +1,6 @@
+Internal Policy Amendment: Customer Service Continuity
+Section 1: Operations teams must maintain a customer notification plan for digital service outages.
+Section 2: Customer communication must begin when outage duration exceeds 6 hours.
+Section 3: IT teams must provide incident timestamps, recovery evidence, and root cause summaries.
+Section 4: Risk teams must assess operational impact for outages affecting more than 10,000 customers.
+Section 5: Compliance teams must confirm whether the outage triggers RBI reporting obligations.

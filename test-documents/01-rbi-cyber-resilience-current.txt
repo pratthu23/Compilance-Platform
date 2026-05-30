@@ -1,0 +1,7 @@
+RBI/2026-27/18 Digital Banking Resilience Circular
+Section 1: Banks must maintain a board-approved cyber security policy and review it every six months.
+Section 2: Material cyber incidents must be reported to the Reserve Bank within 6 hours, with root cause analysis submitted within 72 hours.
+Section 3: Banks must conduct monthly vulnerability assessments for internet-facing systems and critical third-party integrations.
+Section 4: Customer impact communication must be initiated when service disruption exceeds 6 hours.
+Section 5: Banks must appoint a senior accountable officer for digital operational resilience by 30 June 2026.
+Section 6: Evidence of control testing must be preserved for audit review for at least eight years.

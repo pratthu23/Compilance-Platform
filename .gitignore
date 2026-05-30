@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+training/.venv/
+training/compliance_train.jsonl
+training/regintel-compliance-llm/
+training/training_output.log
+training/training_error.log
+backend/data/
+*.pt
+*.pth

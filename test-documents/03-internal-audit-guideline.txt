@@ -1,0 +1,6 @@
+Internal Audit Guideline: Regulatory Closure Evidence
+Section 1: Audit evidence for all high-risk regulatory action points must be retained for eight years.
+Section 2: Compliance teams must upload closure notes, screenshots, SOP references, and approval records.
+Section 3: Audit teams must independently verify whether submitted evidence satisfies the original regulatory obligation.
+Section 4: Failed evidence submissions must be returned to the owning department within 3 business days.
+Section 5: Enterprise risk committees must review overdue high-risk compliance gaps every month.

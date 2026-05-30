@@ -1,0 +1,8 @@
+Resume
+Name: Aarav Sharma
+Email: aarav.sharma@example.com
+Education: B.Tech Computer Science
+Skills: Python, JavaScript, SQL, Machine Learning
+Experience: Software engineering intern working on dashboards and APIs
+Projects: Portfolio website, resume parser, student management system
+Certifications: Cloud fundamentals and data analytics

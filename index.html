@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RegIntel AI Compliance Platform</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <section class="login-screen" id="loginScreen">
+      <div class="login-card">
+        <div class="brand login-brand">
+          <div class="brand-mark" aria-hidden="true">RI</div>
+          <div>
+            <strong>RegIntel AI</strong>
+            <span>Banking Compliance Platform</span>
+          </div>
+        </div>
+        <h1>Sign in to compliance workspace</h1>
+        <p class="muted">Use Firebase email/password authentication, or demo username credentials.</p>
+        <label class="field-label" for="loginUsername">Email or demo username</label>
+        <input id="loginUsername" class="text-input" value="admin" autocomplete="username" placeholder="user@example.com or admin">
+        <label class="field-label" for="loginPassword">Password</label>
+        <input id="loginPassword" class="text-input" type="password" value="admin123" autocomplete="current-password">
+        <div class="login-actions">
+          <button type="button" class="primary-button login-submit" id="loginSubmitBtn">Sign in</button>
+          <button type="button" class="secondary-button login-submit" id="showRegisterBtn">New user</button>
+        </div>
+        <div class="register-fields" id="registerFields">
+          <label class="field-label" for="registerName">Full name</label>
+          <input id="registerName" class="text-input" placeholder="Aarav Sharma">
+          <label class="field-label" for="registerPhone">Phone number for SMS note</label>
+          <div class="phone-row">
+            <select id="registerCountryCode" aria-label="Country code">
+              <option value="+91">India +91</option>
+              <option value="+1">US +1</option>
+              <option value="+44">UK +44</option>
+              <option value="+971">UAE +971</option>
+              <option value="+65">Singapore +65</option>
+            </select>
+            <input id="registerPhone" class="text-input" placeholder="9876543210">
+          </div>
+          <label class="field-label" for="registerRole">Role</label>
+          <select id="registerRole">
+            <option value="Department User">Department User</option>
+            <option value="Compliance Officer">Compliance Officer</option>
+            <option value="Auditor">Auditor</option>
+          </select>
+          <label class="field-label" for="registerDepartment">Department</label>
+          <select id="registerDepartment">
+            <option>Compliance</option>
+            <option>IT</option>
+            <option>Legal</option>
+            <option>Risk</option>
+            <option>Operations</option>
+            <option>Audit</option>
+          </select>
+          <button type="button" class="primary-button login-submit" id="registerSubmitBtn">Register with Firebase</button>
+        </div>
+        <div class="login-hint">
+          <strong>Demo users</strong>
+          <span>admin/admin123 | compliance/compliance123 | it/it123 | audit/audit123</span>
+        </div>
+        <div id="loginError" class="login-error"></div>
+      </div>
+    </section>
+
+    <div class="success-modal" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+      <div class="success-card">
+        <h2 id="successTitle">Registration successful</h2>
+        <p id="successMessage">Thank you for registering.</p>
+        <button type="button" class="primary-button" id="successCloseBtn">Continue</button>
+      </div>
+    </div>
+
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">RI</div>
+          <div>
+            <strong>RegIntel AI</strong>
+            <span>Banking Compliance</span>
+          </div>
+        </div>
+        <nav aria-label="Primary">
+          <a href="#dashboard" class="nav-link active" data-view="dashboard">Dashboard</a>
+          <a href="#ingestion" class="nav-link" data-view="ingestion">Document Ingestion</a>
+          <a href="#department" class="nav-link" data-view="department">Department Dashboard</a>
+          <a href="#maps" class="nav-link" data-view="maps">MAP Workflow</a>
+          <a href="#evidence" class="nav-link" data-view="evidence">Evidence Validation</a>
+          <a href="#ai-lab" class="nav-link" data-view="ai-lab">Free AI Lab</a>
+          <a href="#audit" class="nav-link" data-view="audit">Audit Trail</a>
+          <a href="#architecture" class="nav-link" data-view="architecture">Agent Architecture</a>
+        </nav>
+        <div class="sidebar-footer">
+          <span class="status-dot"></span>
+          <span>Prototype engine active</span>
+        </div>
+      </aside>
+
+      <main>
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Agentic regulatory intelligence</p>
+            <h1>Compliance lifecycle control center</h1>
+          </div>
+          <div class="top-actions">
+            <span class="user-badge" id="currentUserBadge">Not logged in</span>
+            <button type="button" class="secondary-button" id="logoutBtn">Logout</button>
+            <button type="button" class="icon-button" id="runDemoBtn" onclick="runDemoWorkflow()" title="Run agent workflow">Run</button>
+            <select id="reportType" aria-label="Report type">
+              <option value="audit">Audit report</option>
+              <option value="executive">Executive summary</option>
+              <option value="department">Department report</option>
+              <option value="overdue">Overdue report</option>
+              <option value="evidence">Evidence report</option>
+            </select>
+            <button type="button" class="primary-button" id="exportBtn" onclick="exportAudit()">Export PDF</button>
+          </div>
+        </header>
+
+        <section id="dashboard" class="view active">
+          <div class="metrics-grid">
+            <article class="metric">
+              <span>Open MAPs</span>
+              <strong id="metricOpen">0</strong>
+              <small>Generated action points</small>
+            </article>
+            <article class="metric">
+              <span>Overdue</span>
+              <strong id="metricOverdue">0</strong>
+              <small>Need escalation</small>
+            </article>
+            <article class="metric">
+              <span>Risk Exposure</span>
+              <strong id="metricRisk">0</strong>
+              <small>Weighted score</small>
+            </article>
+            <article class="metric">
+              <span>Evidence Pass Rate</span>
+              <strong id="metricPass">0%</strong>
+              <small>Validated proofs</small>
+            </article>
+          </div>
+
+          <div class="dashboard-grid">
+            <section class="panel large">
+              <div class="panel-heading">
+                <h2>Enterprise compliance heatmap</h2>
+                <select id="heatmapFilter" aria-label="Heatmap filter">
+                  <option value="all">All departments</option>
+                  <option value="high">High risk only</option>
+                </select>
+              </div>
+              <div class="heatmap" id="heatmap"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Agent activity</h2>
+              </div>
+              <ol class="agent-feed" id="agentFeed"></ol>
+            </section>
+          </div>
+          <div class="dashboard-grid">
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Latest regulation sources</h2>
+                <button type="button" class="secondary-button" id="fetchSourcesBtn">Fetch latest circulars</button>
+              </div>
+              <div id="sourceFeed" class="task-board"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Automated reminders</h2>
+                <button type="button" class="secondary-button" id="generateRemindersBtn">Generate reminders</button>
+              </div>
+              <div id="reminderFeed" class="task-board"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="department" class="view">
+          <div class="metrics-grid">
+            <article class="metric">
+              <span>My Department</span>
+              <strong id="deptName">All</strong>
+              <small id="deptRole">Login to filter tasks</small>
+            </article>
+            <article class="metric">
+              <span>My MAPs</span>
+              <strong id="deptMapCount">0</strong>
+              <small>Visible to current role</small>
+            </article>
+            <article class="metric">
+              <span>High Priority</span>
+              <strong id="deptHighCount">0</strong>
+              <small>Need attention</small>
+            </article>
+            <article class="metric">
+              <span>Completed</span>
+              <strong id="deptCompleteCount">0</strong>
+              <small>Closed action points</small>
+            </article>
+          </div>
+          <section class="panel">
+            <div class="panel-heading">
+              <h2>Department task queue</h2>
+              <button type="button" class="secondary-button" id="refreshStateBtn">Refresh backend state</button>
+            </div>
+            <div class="task-board" id="departmentBoard"></div>
+          </section>
+        </section>
+
+        <section id="ingestion" class="view">
+          <div class="split-layout">
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Upload or paste regulation</h2>
+              </div>
+              <label class="upload-zone" for="documentFile">
+                <input id="documentFile" type="file" accept=".txt,.pdf,.doc,.docx">
+                <span>Drop a text/PDF/DOCX file or choose one</span>
+                <small>Upload .txt for direct analysis. For PDF/DOCX, paste extracted text into the box.</small>
+              </label>
+              <label class="field-label" for="documentText">Regulatory document text</label>
+              <textarea id="documentText" rows="12"></textarea>
+              <div class="model-option">
+                <label>
+                  <input id="useBigModel" type="checkbox">
+                  Use local big ML model
+                </label>
+                <input id="bigModelName" class="text-input compact-input" value="llama3.2" aria-label="Local model name">
+                <small>Free offline mode through Ollama. Start it with <code>ollama serve</code>.</small>
+              </div>
+              <div class="button-row">
+                <button type="button" class="secondary-button" id="loadSampleBtn">Load sample RBI circular</button>
+                <button type="button" class="primary-button" id="analyzeBtn">Analyze document</button>
+                <button type="button" class="secondary-button" id="compareModelsBtn">Compare models</button>
+              </div>
+              <div id="modelCompareResult" class="model-result"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Parsed obligations</h2>
+              </div>
+              <div id="documentAssessment" class="doc-assessment"></div>
+              <div id="parsedClauses" class="clause-list"></div>
+            </section>
+          </div>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <h2>Regulation diff visualization</h2>
+            </div>
+            <div class="diff-view" id="diffView"></div>
+          </section>
+        </section>
+
+        <section id="maps" class="view">
+          <div class="panel">
+            <div class="panel-heading">
+              <h2>Measurable action points</h2>
+              <div class="segmented" role="tablist" aria-label="MAP filter">
+                <button class="segment active" data-filter="all">All</button>
+                <button class="segment" data-filter="High">High</button>
+                <button class="segment" data-filter="Medium">Medium</button>
+                <button class="segment" data-filter="Low">Low</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Task</th>
+                    <th>Section</th>
+                    <th>Department</th>
+                    <th>Deadline</th>
+                    <th>Priority</th>
+                    <th>Risk</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="mapTable"></tbody>
+              </table>
+            </div>
+            <div class="button-row">
+              <button type="button" class="secondary-button" id="explainSelectedMapBtn">Explain selected MAP</button>
+              <button type="button" class="secondary-button" id="approveSelectedMapBtn">Approve selected MAP</button>
+              <button type="button" class="secondary-button" id="rejectSelectedMapBtn">Reject selected MAP</button>
+            </div>
+            <div id="explainResult" class="model-result"></div>
+          </div>
+        </section>
+
+        <section id="evidence" class="view">
+          <div class="split-layout evidence-layout">
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Implementation proof</h2>
+              </div>
+              <label class="field-label" for="mapSelect">Select MAP</label>
+              <select id="mapSelect"></select>
+              <label class="field-label" for="evidenceText">Evidence text</label>
+              <textarea id="evidenceText" rows="10">Updated SOP includes board-approved cyber incident escalation, customer notification steps, daily monitoring evidence, and report submission owner.</textarea>
+              <label class="field-label" for="evidenceFile">Evidence file upload</label>
+              <input id="evidenceFile" class="text-input" type="file" accept=".txt,.pdf,.doc,.docx,.png,.jpg,.jpeg,.xlsx,.csv">
+              <div class="button-row">
+                <button type="button" class="secondary-button" id="uploadEvidenceBtn">Upload evidence file</button>
+                <button type="button" class="secondary-button" id="extractEvidenceBtn">Extract file text</button>
+                <button type="button" class="primary-button" id="validateEvidenceBtn">Validate evidence</button>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Validation result</h2>
+              </div>
+              <div id="evidenceResult" class="evidence-result"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="ai-lab" class="view">
+          <div class="dashboard-grid">
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Train routing model</h2>
+                <label class="toggle">
+                  <input type="checkbox" id="useTrainedModel">
+                  <span>Use trained routing</span>
+                </label>
+              </div>
+              <p class="muted">This free prototype trains a small text classifier directly in the browser using labeled banking compliance examples.</p>
+              <label class="field-label" for="trainingData">Training data CSV</label>
+              <textarea id="trainingData" rows="12"></textarea>
+              <div class="button-row">
+                <button type="button" class="primary-button" id="trainModelBtn">Train model</button>
+                <button type="button" class="secondary-button" id="testClassifierBtn">Test classifier</button>
+              </div>
+              <div id="trainingResult" class="model-result"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Local LLM connector</h2>
+              </div>
+              <p class="muted">Free option: run Ollama on your laptop and use models like Llama, Mistral, Gemma, or Phi without paid API keys.</p>
+              <label class="field-label" for="ollamaModel">Ollama model name</label>
+              <input id="ollamaModel" class="text-input" value="llama3.2">
+              <label class="field-label" for="llmPrompt">Prompt</label>
+              <textarea id="llmPrompt" rows="8">Generate a clear compliance action point for this banking regulation clause: Material cyber incidents must be reported to the Reserve Bank within 6 hours.</textarea>
+              <div class="button-row">
+                <button type="button" class="primary-button" id="askLocalLlmBtn">Ask local LLM</button>
+                <button type="button" class="secondary-button" id="copyOllamaCmdBtn">Copy setup command</button>
+              </div>
+              <div id="llmResult" class="model-result"></div>
+            </section>
+          </div>
+          <div class="panel">
+            <div class="panel-heading">
+              <h2>Firebase backend</h2>
+              <button type="button" class="secondary-button" id="syncFirebaseBtn">Sync current data</button>
+            </div>
+            <p class="muted">Optional cloud backend for saving analysis runs, MAPs, evidence reviews, trained model runs, and audit events to Firestore.</p>
+            <div class="firebase-status" id="firebaseStatus">Checking Firebase configuration...</div>
+            <div class="button-row">
+              <button type="button" class="secondary-button" id="testFirebaseBtn">Test Firebase</button>
+              <button type="button" class="secondary-button" id="showFirebaseHelpBtn">Setup steps</button>
+              <button type="button" class="secondary-button" id="syncBackendFirebaseBtn">Sync backend DB</button>
+            </div>
+            <div id="firebaseResult" class="model-result"></div>
+          </div>
+        </section>
+
+        <section id="audit" class="view">
+          <div class="panel">
+            <div class="panel-heading">
+              <h2>Regulator-ready audit history</h2>
+              <button type="button" class="secondary-button" id="clearAuditBtn">Clear demo log</button>
+            </div>
+            <div id="exportResult" class="model-result"></div>
+            <div class="audit-log" id="auditLog"></div>
+          </div>
+        </section>
+
+        <section id="architecture" class="view">
+          <div class="panel">
+            <div class="panel-heading">
+              <h2>Multi-agent workflow</h2>
+            </div>
+            <div class="agent-map" id="agentMap">
+              <div class="agent-node">Regulation Parsing Agent</div>
+              <div class="agent-node">Change Detection Agent</div>
+              <div class="agent-node">MAP Generation Agent</div>
+              <div class="agent-node">Department Routing Agent</div>
+              <div class="agent-node">Risk Intelligence Agent</div>
+              <div class="agent-node">Evidence Validation Agent</div>
+              <div class="agent-node">Audit Trail Agent</div>
+            </div>
+          </div>
+          <div class="dashboard-grid">
+            <section class="panel">
+              <h2>Retrieval and model layer</h2>
+              <ul class="feature-list">
+                <li>RAG context retrieval over RBI, SEBI, audit, and internal policies.</li>
+                <li>Semantic embeddings for diffing, similarity search, and proof matching.</li>
+                <li>Fine-tuned FinBERT or Legal-BERT for compliance classification.</li>
+                <li>Multilingual translation support for distributed operations.</li>
+              </ul>
+            </section>
+            <section class="panel">
+              <h2>Enterprise controls</h2>
+              <ul class="feature-list">
+                <li>Explainable MAPs with source clause and routing reason.</li>
+                <li>Department dashboards, reminders, and overdue escalation.</li>
+                <li>Evidence pass, fail, or needs review decisions.</li>
+                <li>Immutable audit events for every AI and user action.</li>
+              </ul>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="firebase-config.js"></script>
+    <script type="module" src="firebase-service.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

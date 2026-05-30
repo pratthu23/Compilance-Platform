@@ -1,0 +1,6 @@
+Generate a structured MAP JSON for this clause:
+
+Material cyber incidents must be reported to the Reserve Bank within 6 hours, with root cause analysis submitted within 72 hours.
+
+Return fields:
+task, department, priority, deadline, risk_score, evidence_required, reasoning.
