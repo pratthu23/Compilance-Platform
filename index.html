@@ -309,6 +309,7 @@
                 <button type="button" class="secondary-button" id="extractEvidenceBtn">Extract file text</button>
                 <button type="button" class="primary-button" id="validateEvidenceBtn">Validate evidence</button>
               </div>
+              <p class="muted" id="browserAiStatus">Browser AI model: not loaded yet</p>
             </section>
             <section class="panel">
               <div class="panel-heading">
@@ -424,6 +425,7 @@
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="firebase-config.js"></script>
     <script type="module" src="firebase-service.js"></script>
+    <script type="module" src="browser-ai.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

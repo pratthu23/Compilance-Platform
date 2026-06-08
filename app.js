@@ -12,7 +12,7 @@ Section 4: Customer impact communication must be initiated when service disrupti
 Section 5: Banks must appoint a senior accountable officer for digital operational resilience by 30 June 2026.
 Section 6: Evidence of control testing must be preserved for audit review for at least eight years.`;
 
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = "https://compilance-platform.onrender.com";
 const departments = ["Compliance", "Legal", "Risk", "Operations", "Audit", "IT"];
 
 const defaultTrainingData = `clause,department
@@ -944,13 +944,26 @@ async function validateEvidence() {
       reasoning: evidenceReasoning(verdict, map, matched)
     };
   }
+  if (window.browserAI?.enhanceEvidence) {
+    try {
+      showToast("Running browser AI semantic check");
+      const statusTarget = document.getElementById("browserAiStatus");
+      if (statusTarget) {
+        statusTarget.textContent = `Browser AI model: checking semantic match with ${window.browserAI.modelId}`;
+      }
+      result = await window.browserAI.enhanceEvidence(map, evidenceText, result);
+    } catch (error) {
+      result.reasoning = `${result.reasoning} Browser AI was unavailable: ${error.message}`;
+    }
+  }
+  const matchedTerms = result.matched || result.matchedTerms || [];
   state.evidence.push(result);
   map.status = result.verdict === "Pass" ? "Complete" : "Needs Evidence";
   saveToFirebase("evidence", { result, map, evidenceText });
   renderEvidenceResult(result);
   renderMetrics();
   renderMaps();
-  logAudit("Evidence Validation Agent", `Evidence marked ${result.verdict}`, `${map.id} coverage ${result.coverage}% with matched terms: ${result.matched.join(", ") || "none"}.`);
+  logAudit("Evidence Validation Agent", `Evidence marked ${result.verdict}`, `${map.id} coverage ${result.coverage}% with matched terms: ${matchedTerms.join(", ") || "none"}.`);
 }
 
 async function extractEvidenceText() {
@@ -1020,13 +1033,16 @@ function evidenceReasoning(verdict, map, matched) {
 
 function renderEvidenceResult(result) {
   const target = document.getElementById("evidenceResult");
+  const matchedTerms = result.matched || result.matchedTerms || [];
   target.innerHTML = `<div class="score-ring" style="--score:${result.coverage}%">
       <span>${result.coverage}%</span>
     </div>
     <span class="pill ${result.verdict.split(" ")[0]}">${result.verdict}</span>
     <h2>${result.mapId}</h2>
     <p>${result.reasoning}</p>
-    <small>Matched terms: ${result.matched.join(", ") || "none"}</small>`;
+    ${Number.isFinite(result.browserSemanticCoverage) ? `<small>Browser AI semantic score: ${result.browserSemanticCoverage}%</small>` : ""}
+    ${Number.isFinite(result.semanticCoverage) ? `<small>Backend semantic score: ${result.semanticCoverage}%</small>` : ""}
+    <small>Matched terms: ${matchedTerms.join(", ") || "none"}</small>`;
 }
 
 function renderAudit() {
@@ -1664,6 +1680,12 @@ Confidence: ${prediction.confidence}%</pre>`;
   document.getElementById("syncBackendFirebaseBtn").addEventListener("click", syncBackendFirebaseSnapshot);
   document.getElementById("showFirebaseHelpBtn").addEventListener("click", showFirebaseHelp);
   window.addEventListener("firebase-backend-ready", renderFirebaseStatus);
+  window.addEventListener("browser-ai-status", (event) => {
+    const target = document.getElementById("browserAiStatus");
+    if (target) {
+      target.textContent = `Browser AI model: ${event.detail.message}`;
+    }
+  });
 }
 
 function boot() {
@@ -1672,6 +1694,9 @@ function boot() {
   document.getElementById("trainingData").value = defaultTrainingData;
   renderAll();
   renderFirebaseStatus();
+  if (window.browserAI?.modelId) {
+    document.getElementById("browserAiStatus").textContent = `Browser AI model: ready to load ${window.browserAI.modelId} when evidence is validated`;
+  }
   applyRoleAccess();
   document.getElementById("agentFeed").innerHTML = `<li><strong>Waiting for document</strong><small>Upload, paste, or load a sample regulation to start the agent workflow.</small></li>`;
 }
